@@ -4,8 +4,10 @@ from tensorflow.keras.layers import GlobalMaxPooling2D
 from tensorflow.keras.applications.resnet50 import ResNet50,preprocess_input
 import numpy as np
 from numpy.linalg import norm
+import os
+from tqdm import tqdm
 
-def model():
+def build_model():
     model = ResNet50(weights='imagenet',include_top=False,input_shape=(224,224,3))
     model.trainable = False
     model = tensorflow.keras.Sequential([
@@ -25,5 +27,9 @@ def extract_features(img_path,model):
     return normalized_result
 
 
+filenames = []
+for file in os.listdir('fashion-dataset/images'):
+    filenames.append(os.path.join('fashion-dataset/images',file))
+
 if __name__ == "__main__":
-    model = model()
+    print(filenames[:5])
