@@ -15,7 +15,7 @@ def build_model():
         model,
         GlobalMaxPooling2D()
     ])
-    print(model.summary())
+    model.save('model.h5')
     return model
 
 def extract_features(img_path,model):
@@ -28,12 +28,18 @@ def extract_features(img_path,model):
     return normalized_result
 
 
-model = build_model()
-filenames = []
-for file in os.listdir('fashion-dataset/images'):
-    filenames.append(os.path.join('fashion-dataset/images',file))
-feature_list = []
-for file in tqdm(filenames):
-    feature_list.append(extract_features(file,model))
-pickle.dump(feature_list,open('embeddings/embeddings.pkl','wb'))
-pickle.dump(filenames,open('embeddings/filenames.pkl','wb'))
+def generate_embeddings():
+    filenames = []
+    for file in os.listdir('fashion-dataset/images'):
+        filenames.append(os.path.join('fashion-dataset/images',file))
+    
+    model = build_model()
+    feature_list = []
+    for file in tqdm(filenames):
+        feature_list.append(extract_features(file,model))
+    pickle.dump(feature_list,open('embeddings/embeddings.pkl','wb'))
+    pickle.dump(filenames,open('embeddings/filenames.pkl','wb'))
+
+
+if __name__ == "__main__":
+    model = build_model()
