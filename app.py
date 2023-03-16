@@ -6,6 +6,7 @@ import numpy as np
 from numpy.linalg import norm
 import os
 from tqdm import tqdm
+import pickle
 
 def build_model():
     model = ResNet50(weights='imagenet',include_top=False,input_shape=(224,224,3))
@@ -27,9 +28,12 @@ def extract_features(img_path,model):
     return normalized_result
 
 
+model = build_model()
 filenames = []
 for file in os.listdir('fashion-dataset/images'):
     filenames.append(os.path.join('fashion-dataset/images',file))
-
-if __name__ == "__main__":
-    print(filenames[:5])
+feature_list = []
+for file in tqdm(filenames):
+    feature_list.append(extract_features(file,model))
+pickle.dump(feature_list,open('embeddings.pkl','wb'))
+pickle.dump(filenames,open('filenames.pkl','wb'))
